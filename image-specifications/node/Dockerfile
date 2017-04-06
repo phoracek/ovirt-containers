@@ -34,6 +34,14 @@ RUN yum install -y https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release
 RUN yum install -y vdsm vdsm-cli vdsm-hook-faqemu; yum clean all;
 RUN yum install -y dhclient rsyslog iproute grub2-tools openssh-server; yum clean all;
 
+# install node-network-hook
+COPY node-network-hook /tmp/node-network-hook
+RUN \
+  yum install -y python-requests; \
+  pushd /tmp/node-network-hook; \
+  sh install.sh; \
+  popd
+
 # conf for host-deploy to avoid upgrading packages check
 RUN mkdir /etc/ovirt-host-deploy.conf.d
 ADD confs/50-offline-packager.conf /etc/ovirt-host-deploy.conf.d/
